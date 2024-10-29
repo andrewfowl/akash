@@ -1,0 +1,39 @@
+/vscode/bin/linux-x64/384ff7382de624fb94dbaf6da11977bba1ecd427/bin/remote-cli/code
+sudo /usr/bin/code --user-data-dir="~/.vscode-root" /etc/environment
+
+wget https://github.com/akash-network/node/releases/download/v1.0.0-rc7/akash_1.0.0-rc7_linux_amd64.zip
+unzip akash_1.0.0-rc7_linux_amd64.zip
+
+sudo mv akash /usr/local/bin/
+
+AKASH_NET="https://raw.githubusercontent.com/akash-network/net/main/mainnet"
+AKASH_VERSION="$(curl -s https://api.github.com/repos/akash-network/provider/releases/latest | jq -r '.tag_name')"
+export AKASH_CHAIN_ID="$(curl -s "$AKASH_NET/chain-id.txt")"
+export AKASH_NODE="$(curl -s "$AKASH_NET/rpc-nodes.txt" | shuf -n 1)"
+
+https://api.archival.akashnet.net/token/impish-hammock/cosmos/bank/v1beta1/balances
+
+https://api.archival.akashnet.net/token/impish-hammock/cosmos/tx/v1beta1/txs?events=message.sender%3D%27akash1qt0hg4nxv328t286m8j5u0y49lj3x5apymql3s%27&pagination.limit=50
+
+https://akash-api.polkachu.com/cosmos/bank/v1beta1/balances
+
+akash query bank balances akash1qt0hg4nxv328t286m8j5u0y49lj3x5apymql3s --height 1 --node https://api.archival.akashnet.net/token/impish-hammock:443
+akash query bank balances akash1qt0hg4nxv328t286m8j5u0y49lj3x5apymql3s --node https://rpc.archival.akashnet.net/token/impish-hammock:443
+akash query bank balances akash1qt0hg4nxv328t286m8j5u0y49lj3x5apymql3s --height 18571453  --node https://akash-rpc.polkachu.com:443
+
+sudo ln -s /etc/nginx/sites-available/akash_proxy /etc/nginx/sites-enabled/
+sudo nginx -t  # Test the configuration
+sudo service nginx restart
+
+sudo tar -C /workspaces/akash -xvf go1.16.7.linux-amd64.tar.gz
+export PATH=$PATH:/workspaces/akash/go/bin
+
+export PATH=$PATH:/go/bin/
+
+
+export AKASH_NET="https://raw.githubusercontent.com/ovrclk/net/master/mainnet" AKASH_VERSION="$(curl -s "$AKASH_NET/version.txt")" AKASH_CHAIN_ID="$(curl -s "$AKASH_NET/chain-id.txt")"
+export AKASH_ACCOUNT_ADDRESS=akash1qt0hg4nxv328t286m8j5u0y49lj3x5apymql3s AKASH_NODE=https://rpc.archival.akashnet.net/token/impish-hammock
+export AKASH_NODE=https://akash-rpc.polkachu.com:443
+export AKASH_GAS=auto AKASH_GAS_ADJUSTMENT=1.25 AKASH_GAS_PRICES=0.025uakt AKASH_SIGN_MODE=amino-json
+
+akash query account akash1qt0hg4nxv328t286m8j5u0y49lj3x5apymql3s --node http://localhost:8080
